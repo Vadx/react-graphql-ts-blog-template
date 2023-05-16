@@ -1,22 +1,23 @@
-// import { useState } from "react";
+import { useState } from "react";
+import { DeleteOutlined } from "@ant-design/icons";
 // import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Avatar, Card } from "antd";
 import { IPost } from "../models/IPost";
 import { Link } from "react-router-dom";
 // import UpdatePostItem from "./modals/UpdatePostItem";
-// import ConfirmRemovePostItem from "./modals/ConfirmRemovePostItem";
+import ConfirmRemovePostItem from "./modals/ConfirmRemovePostItem";
 // import { StarFilled, StarOutlined } from "@ant-design/icons";
 
 const { Meta } = Card;
 
 export interface PostItemProps {
   post: IPost;
-  remove: (post: IPost) => void;
+  remove: (post: number) => void;
 }
 
 const PostItem = ({ post, remove }: PostItemProps) => {
   // const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [isConfirmRemoveOpen, setIsConfirmRemoveOpen] = useState(false);
+  const [isConfirmRemoveOpen, setIsConfirmRemoveOpen] = useState(false);
 
   // const { addFavorite, removeFavorite } = useActions();
   // const { favorites } = useAppSelector((state) => state.favoritePosts);
@@ -26,18 +27,18 @@ const PostItem = ({ post, remove }: PostItemProps) => {
   //   setIsModalOpen(false);
   // };
 
-  // const handleOpenRemoveModal = () => {
-  //   setIsConfirmRemoveOpen(true);
-  // };
+  const handleOpenRemoveModal = () => {
+    setIsConfirmRemoveOpen(true);
+  };
 
-  // const handleCloseRemoveModal = () => {
-  //   setIsConfirmRemoveOpen(false);
-  // };
+  const handleCloseRemoveModal = () => {
+    setIsConfirmRemoveOpen(false);
+  };
 
-  // const handleRemove = (e: React.MouseEvent<HTMLElement>) => {
-  //   e.stopPropagation();
-  //   remove(post);
-  // };
+  const handleRemove = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    remove(post.id);
+  };
 
   // const handlePostUpdateOpen = () => {
   //   setIsModalOpen(true);
@@ -64,22 +65,20 @@ const PostItem = ({ post, remove }: PostItemProps) => {
         onCancel={handleCancelUpdate}
         postItem={post}
       /> */}
-      {/* <ConfirmRemovePostItem
+      <ConfirmRemovePostItem
         onOk={handleRemove}
         open={isConfirmRemoveOpen}
         title="Please confirm Remove"
         onCancel={handleCloseRemoveModal}
         contentRemove={post.title}
-      /> */}
+      />
       <Card
         style={{ width: "100%", marginBottom: 20 }}
         cover={<img alt="example" src={post.postImage} />}
-        actions={
-          [
-            // <EditOutlined key="edit" onClick={handlePostUpdateOpen} />,
-            // <DeleteOutlined key="delete" onClick={handleOpenRemoveModal} />,
-          ]
-        }
+        actions={[
+          // <EditOutlined key="edit" onClick={handlePostUpdateOpen} />,
+          <DeleteOutlined key="delete" onClick={handleOpenRemoveModal} />,
+        ]}
       >
         <Meta
           avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}

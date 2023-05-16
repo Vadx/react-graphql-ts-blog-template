@@ -1,5 +1,5 @@
 import React from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import PostItem from "./PostItem";
 import { IPost } from "@/models/IPost";
 import { Col, Divider, Row, Pagination, FloatButton } from "antd";
@@ -7,7 +7,7 @@ import { Col, Divider, Row, Pagination, FloatButton } from "antd";
 import SpinnerPostList from "./SpinnerPostList";
 // import CreatePostItem from "./modals/CreatePostItem";
 import { FileAddOutlined } from "@ant-design/icons";
-import { ALL_POST } from "@/apollo/posts";
+import { ALL_POST, DELETE_POST } from "@/apollo/posts";
 
 interface Response {
   posts: IPost[];
@@ -16,12 +16,10 @@ interface Response {
 const PostList = () => {
   // const [limit, setLimit] = React.useState<number>(9);
   // const [page, setPage] = React.useState<number>(1)
-  // const {
-  //   data: posts,
-  //   error,
-  //   isLoading,
-  // } = postAPI.useFetchAllPostsQuery(limit);
-  // const [deletePost, {}] = postAPI.useDeletePostMutation();
+
+  const [removePost] = useMutation(DELETE_POST, {
+    refetchQueries: [{ query: ALL_POST }],
+  });
 
   const { loading, error, data } = useQuery<Response>(ALL_POST);
 
@@ -32,15 +30,13 @@ const PostList = () => {
     // setIsOpenCreateModal(true);
   };
 
-  const handleCloseCreateModal = () => {
-    // setIsOpenCreateModal(false);
-  };
+  // const handleCloseCreateModal = () => {
+  //   // setIsOpenCreateModal(false);
+  // };
 
-  const handleRemove = (post: IPost) => {
-    // deletePost(post);
+  const handleRemove = (postId: number) => {
+    removePost({ variables: { id: postId } });
   };
-
-  // console.log('All pages:', page)
 
   // const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
   //   console.log(current, pageSize);
@@ -60,7 +56,6 @@ const PostList = () => {
         open={isOpenCreateModal}
         onCancel={handleCloseCreateModal}
       /> */}
-      {/* <div>{`${posts?.total || 'NA'}`}</div> */}
       <Divider orientation="center">Articles</Divider>
       {loading && <SpinnerPostList />}
       {error && <h1>Something wrong...</h1>}

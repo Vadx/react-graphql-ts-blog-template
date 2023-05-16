@@ -5,7 +5,7 @@ const { Title } = Typography;
 interface ConfirmRemovePostItemProps {
   open: boolean;
   title: string;
-  onOk: (values: any) => void;
+  onOk: (values: React.MouseEvent<HTMLElement>) => void;
   onCancel: () => void;
   contentRemove: string;
 }

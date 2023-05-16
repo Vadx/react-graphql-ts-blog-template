@@ -12,8 +12,8 @@ export const ALL_POST = gql`
 `;
 
 export const GET_POST = gql`
-  query Post($id: ID!) {
-    Post(id: $id) {
+  query GetPost($id: ID!) {
+    post(id: $id) {
       id
       title
       postImage
