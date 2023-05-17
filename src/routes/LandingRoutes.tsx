@@ -1,9 +1,12 @@
-import LandingLayout from "@/layouts/LandingLayout";
-import AboutPage from "@/pages/AboutPage";
-import ContactUsPage from "@/pages/ContactUsPage";
-import HomePage from "@/pages/HomePage";
-import ProfilePage from "@/pages/ProfilePage";
+import { lazy } from "react";
+import Loadable from "@/components/common/Loadable";
 import ErrorRouterElement from "./ErrorRouterElement";
+import LandingLayout from "@/layouts/LandingLayout";
+
+const HomePage = Loadable(lazy(() => import("@/pages/HomePage")));
+const AboutPage = Loadable(lazy(() => import("@/pages/AboutPage")));
+const ProfilePage = Loadable(lazy(() => import("@/pages/ProfilePage")));
+const ContactUsPage = Loadable(lazy(() => import("@/pages/ContactUsPage")));
 
 const LandingRoutes = {
   path: "/",

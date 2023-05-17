@@ -1,7 +1,11 @@
+import { lazy } from "react";
+import Loadable from "@/components/common/Loadable";
+
 import BlogLayout from "@/layouts/BlogLayout";
-import BlogPage from "@/pages/BlogPage";
-import SinglePostPage from "@/pages/SinglePostPage";
 import ErrorRouterElement from "./ErrorRouterElement";
+
+const BlogPage = Loadable(lazy(() => import("@/pages/BlogPage")));
+const SinglePostPage = Loadable(lazy(() => import("@/pages/SinglePostPage")));
 
 const BlogRoutes = {
   path: "/articles",
