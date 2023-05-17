@@ -1,7 +1,8 @@
+import { useMutation } from "@apollo/client";
+import { ALL_POST, UPDATE_POST } from "@/apollo/posts";
 import { Modal, Form, Input } from "antd";
 import React from "react";
 import { IPost } from "../../models/IPost";
-import { postAPI } from "../../store/api/postAPI";
 import { ToastContainer, toast } from "react-toastify";
 
 interface UpdatePostItemProps {
@@ -22,8 +23,10 @@ const UpdatePostItem = ({
   onCancel,
   postItem,
 }: UpdatePostItemProps) => {
-  const [updatePost, {}] = postAPI.useUpdatePostMutation();
   const [form] = Form.useForm();
+  const [updatePost, { error }] = useMutation<IPost>(UPDATE_POST, {
+    refetchQueries: [{ query: ALL_POST }],
+  });
 
   const [postItemUpdate, setPostItemUpdate] = React.useState<IPost>({
     id: postItem.id,
@@ -34,21 +37,24 @@ const UpdatePostItem = ({
 
   const onFinish = () => {
     updatePost({
-      ...postItemUpdate,
-      id: postItemUpdate.id,
-      title: postItemUpdate.title,
-      body: postItemUpdate.body,
-      postImage: postItemUpdate.postImage,
+      variables: {
+        ...postItemUpdate,
+        id: postItemUpdate.id,
+        title: postItemUpdate.title,
+        body: postItemUpdate.body,
+        postImage: postItemUpdate.postImage,
+      },
+    }).then(() => {
+      onCancel();
+      toast.success(
+        "The article: " + `${postItemUpdate.title}` + " was updated",
+        {
+          autoClose: 3000,
+          closeOnClick: true,
+          pauseOnHover: false,
+        }
+      );
     });
-    onCancel();
-    toast.success(
-      "The article: " + `${postItemUpdate.title}` + " was updated",
-      {
-        autoClose: 3000,
-        closeOnClick: true,
-        pauseOnHover: false,
-      }
-    );
   };
 
   return (
@@ -77,7 +83,7 @@ const UpdatePostItem = ({
             rules={[{ required: true }]}
           >
             <Input
-              onChange={(e: any) =>
+              onChange={(e) =>
                 setPostItemUpdate({ ...postItemUpdate, title: e.target.value })
               }
             />
@@ -89,7 +95,7 @@ const UpdatePostItem = ({
             rules={[{ required: true }]}
           >
             <Input
-              onChange={(e: any) =>
+              onChange={(e) =>
                 setPostItemUpdate({
                   ...postItemUpdate,
                   postImage: e.target.value,
@@ -106,11 +112,12 @@ const UpdatePostItem = ({
             <Input.TextArea
               allowClear
               showCount
-              onChange={(e: any) =>
+              onChange={(e) =>
                 setPostItemUpdate({ ...postItemUpdate, body: e.target.value })
               }
             />
           </Form.Item>
+          {error && <>Oppps! Try again!</>}
         </Form>
       </Modal>
     </>

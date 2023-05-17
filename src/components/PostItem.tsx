@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { DeleteOutlined } from "@ant-design/icons";
-// import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Avatar, Card } from "antd";
 import { IPost } from "../models/IPost";
 import { Link } from "react-router-dom";
-// import UpdatePostItem from "./modals/UpdatePostItem";
+import UpdatePostItem from "./modals/UpdatePostItem";
 import ConfirmRemovePostItem from "./modals/ConfirmRemovePostItem";
 // import { StarFilled, StarOutlined } from "@ant-design/icons";
 
@@ -16,16 +15,16 @@ export interface PostItemProps {
 }
 
 const PostItem = ({ post, remove }: PostItemProps) => {
-  // const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmRemoveOpen, setIsConfirmRemoveOpen] = useState(false);
 
   // const { addFavorite, removeFavorite } = useActions();
   // const { favorites } = useAppSelector((state) => state.favoritePosts);
   // const [isFav, setIsFav] = useState(favorites.includes(post.title));
 
-  // const handleCancelUpdate = () => {
-  //   setIsModalOpen(false);
-  // };
+  const handleCancelUpdate = () => {
+    setIsModalOpen(false);
+  };
 
   const handleOpenRemoveModal = () => {
     setIsConfirmRemoveOpen(true);
@@ -40,9 +39,9 @@ const PostItem = ({ post, remove }: PostItemProps) => {
     remove(post.id);
   };
 
-  // const handlePostUpdateOpen = () => {
-  //   setIsModalOpen(true);
-  // };
+  const handlePostUpdateOpen = () => {
+    setIsModalOpen(true);
+  };
 
   // Favorites
   // const addToFavorite = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -59,12 +58,12 @@ const PostItem = ({ post, remove }: PostItemProps) => {
 
   return (
     <>
-      {/* <UpdatePostItem
+      <UpdatePostItem
         title={`Update Post: ${post.title}`}
         open={isModalOpen}
         onCancel={handleCancelUpdate}
         postItem={post}
-      /> */}
+      />
       <ConfirmRemovePostItem
         onOk={handleRemove}
         open={isConfirmRemoveOpen}
@@ -76,7 +75,7 @@ const PostItem = ({ post, remove }: PostItemProps) => {
         style={{ width: "100%", marginBottom: 20 }}
         cover={<img alt="example" src={post.postImage} />}
         actions={[
-          // <EditOutlined key="edit" onClick={handlePostUpdateOpen} />,
+          <EditOutlined key="edit" onClick={handlePostUpdateOpen} />,
           <DeleteOutlined key="delete" onClick={handleOpenRemoveModal} />,
         ]}
       >

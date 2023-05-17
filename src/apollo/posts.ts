@@ -35,12 +35,12 @@ export const ADD_POST = gql`
 
 export const UPDATE_POST = gql`
   mutation UpdatePost(
-    $title: String!
+    $id: ID!
     $title: String!
     $postImage: String!
     $body: String!
   ) {
-    updatePost(id: $id, completed: $completed) {
+    updatePost(id: $id, title: $title, postImage: $postImage, body: $body) {
       id
       title
       postImage
