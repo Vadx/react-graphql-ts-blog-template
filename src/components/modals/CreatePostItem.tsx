@@ -19,7 +19,7 @@ const layout = {
 const CreatePostItem = ({ open, onCancel }: CreatePostItemProps) => {
   const [form] = Form.useForm();
 
-  const [addPost, { error }] = useMutation(ADD_POST, {
+  const [createPost, { error }] = useMutation(ADD_POST, {
     refetchQueries: [{ query: ALL_POST }],
     // update(cache, { data: { addPost } }) {
     //   const { posts } = cache.readQuery({ query: ALL_POST });
@@ -33,54 +33,28 @@ const CreatePostItem = ({ open, onCancel }: CreatePostItemProps) => {
     // },
   });
 
-  // const [addPost] = useMutation(ADD_POST);
-
   const [postItem, setPostItem] = React.useState({
     title: "",
     body: "",
     postImage: "",
   } as IPost);
 
-  // const onFinish = async (values: any) => {
-  //   try {
-  //     await createPost({
-  //       title: postItem.title,
-  //       body: postItem.body,
-  //       postImage: postItem.postImage,
-  //     } as IPost);
-  //     form.resetFields();
-  //     onCancel();
-  //     toast("A new article was created");
-  //   } catch (err) {
-  //     console.error("Failed to save the post: ", err);
-  //   }
-  // };
-
-  const onFinish = () => {
-    addPost({
-      variables: {
-        title: postItem.title,
-        body: postItem.body,
-        postImage: postItem.postImage,
-        id: 12,
-      },
-    });
+  const onFinish = async () => {
+    try {
+      await createPost({
+        variables: {
+          title: postItem.title,
+          body: postItem.body,
+          postImage: postItem.postImage,
+        },
+      });
+      form.resetFields();
+      onCancel();
+      toast("A new article was created");
+    } catch (err) {
+      console.error("Failed to save the post: ", err);
+    }
   };
-
-  // const onFinish = async (values: any) => {
-  //   try {
-  //     await addPost({
-  //       title: postItem.title,
-  //       body: postItem.body,
-  //       postImage: postItem.postImage,
-  //     } as IPost);
-  //     form.resetFields();
-  //     onCancel();
-  //     toast("A new article was created");
-  //   } catch (err) {
-  //     console.error("Failed to save the post: ", err);
-  //   }
-  // };
 
   return (
     <>

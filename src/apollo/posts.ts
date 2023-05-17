@@ -23,13 +23,8 @@ export const GET_POST = gql`
 `;
 
 export const ADD_POST = gql`
-  mutation AddPost($title: String!, $postImage: String!, $body: String!) {
-    addPost: createPost(
-      id: $id
-      title: $title
-      postImage: $postImage
-      body: $body
-    ) {
+  mutation CreatePost($title: String!, $postImage: String!, $body: String!) {
+    createPost(title: $title, postImage: $postImage, body: $body) {
       id
       title
       postImage
@@ -37,16 +32,6 @@ export const ADD_POST = gql`
     }
   }
 `;
-
-// const CREATE_POST = gql`
-//   mutation CreatePost($title: String!, $body: String!) {
-//     createPost(title: $title, body: $body) {
-//       id
-//       title
-//       body
-//     }
-//   }
-// `;
 
 export const UPDATE_POST = gql`
   mutation UpdatePost(
