@@ -1,7 +1,6 @@
-import { Modal, Form, Input } from "antd";
+import { Modal, Form, Input, message } from "antd";
 import React from "react";
 import { IPost } from "../../models/IPost";
-import { ToastContainer, toast } from "react-toastify";
 import { useMutation } from "@apollo/client";
 import { ADD_POST, ALL_POST } from "@/apollo/posts";
 
@@ -18,6 +17,7 @@ const layout = {
 
 const CreatePostItem = ({ open, onCancel }: CreatePostItemProps) => {
   const [form] = Form.useForm();
+  const [messageApi, contextHolder] = message.useMessage();
 
   const [createPost, { error }] = useMutation(ADD_POST, {
     refetchQueries: [{ query: ALL_POST }],
@@ -50,7 +50,10 @@ const CreatePostItem = ({ open, onCancel }: CreatePostItemProps) => {
       });
       form.resetFields();
       onCancel();
-      toast("A new article was created");
+      messageApi.info({
+        type: "success",
+        content: "A new article was created",
+      });
     } catch (err) {
       console.error("Failed to save the post: ", err);
     }
@@ -58,7 +61,7 @@ const CreatePostItem = ({ open, onCancel }: CreatePostItemProps) => {
 
   return (
     <>
-      <ToastContainer />
+      {contextHolder}
       <Modal
         open={open}
         title="Create New Post"

@@ -1,9 +1,8 @@
 import { useMutation } from "@apollo/client";
 import { ALL_POST, UPDATE_POST } from "@/apollo/posts";
-import { Modal, Form, Input } from "antd";
+import { Modal, Form, Input, message } from "antd";
 import React from "react";
 import { IPost } from "../../models/IPost";
-import { ToastContainer, toast } from "react-toastify";
 
 interface UpdatePostItemProps {
   postItem: IPost;
@@ -24,6 +23,7 @@ const UpdatePostItem = ({
   postItem,
 }: UpdatePostItemProps) => {
   const [form] = Form.useForm();
+  const [messageApi, contextHolder] = message.useMessage();
   const [updatePost, { error }] = useMutation<IPost>(UPDATE_POST, {
     refetchQueries: [{ query: ALL_POST }],
   });
@@ -46,20 +46,16 @@ const UpdatePostItem = ({
       },
     }).then(() => {
       onCancel();
-      toast.success(
-        "The article: " + `${postItemUpdate.title}` + " was updated",
-        {
-          autoClose: 3000,
-          closeOnClick: true,
-          pauseOnHover: false,
-        }
-      );
+      messageApi.info({
+        type: "success",
+        content: "The article:" + `${postItemUpdate.title}` + " was updated",
+      });
     });
   };
 
   return (
     <>
-      <ToastContainer />
+      {contextHolder}
       <Modal
         open={open}
         title={title}
