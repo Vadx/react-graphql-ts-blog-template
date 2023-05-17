@@ -1,8 +1,9 @@
 import { Modal, Form, Input } from "antd";
 import React from "react";
 import { IPost } from "../../models/IPost";
-import { postAPI } from "../../store/api/postAPI";
 import { ToastContainer, toast } from "react-toastify";
+import { useMutation } from "@apollo/client";
+import { ADD_POST, ALL_POST } from "@/apollo/posts";
 
 interface CreatePostItemProps {
   open: boolean;
@@ -18,7 +19,21 @@ const layout = {
 const CreatePostItem = ({ open, onCancel }: CreatePostItemProps) => {
   const [form] = Form.useForm();
 
-  const [createPost, {}] = postAPI.useCreatePostMutation();
+  const [addPost, { error }] = useMutation(ADD_POST, {
+    refetchQueries: [{ query: ALL_POST }],
+    // update(cache, { data: { addPost } }) {
+    //   const { posts } = cache.readQuery({ query: ALL_POST });
+
+    //   cache.writeQuery({
+    //     query: ALL_POST,
+    //     data: {
+    //       posts: [addPost, ...posts],
+    //     },
+    //   });
+    // },
+  });
+
+  // const [addPost] = useMutation(ADD_POST);
 
   const [postItem, setPostItem] = React.useState({
     title: "",
@@ -26,20 +41,46 @@ const CreatePostItem = ({ open, onCancel }: CreatePostItemProps) => {
     postImage: "",
   } as IPost);
 
-  const onFinish = async (values: any) => {
-    try {
-      await createPost({
+  // const onFinish = async (values: any) => {
+  //   try {
+  //     await createPost({
+  //       title: postItem.title,
+  //       body: postItem.body,
+  //       postImage: postItem.postImage,
+  //     } as IPost);
+  //     form.resetFields();
+  //     onCancel();
+  //     toast("A new article was created");
+  //   } catch (err) {
+  //     console.error("Failed to save the post: ", err);
+  //   }
+  // };
+
+  const onFinish = () => {
+    addPost({
+      variables: {
         title: postItem.title,
         body: postItem.body,
         postImage: postItem.postImage,
-      } as IPost);
-      form.resetFields();
-      onCancel();
-      toast("A new article was created");
-    } catch (err) {
-      console.error("Failed to save the post: ", err);
-    }
+        id: 12,
+      },
+    });
   };
+
+  // const onFinish = async (values: any) => {
+  //   try {
+  //     await addPost({
+  //       title: postItem.title,
+  //       body: postItem.body,
+  //       postImage: postItem.postImage,
+  //     } as IPost);
+  //     form.resetFields();
+  //     onCancel();
+  //     toast("A new article was created");
+  //   } catch (err) {
+  //     console.error("Failed to save the post: ", err);
+  //   }
+  // };
 
   return (
     <>
@@ -92,6 +133,7 @@ const CreatePostItem = ({ open, onCancel }: CreatePostItemProps) => {
               value={postItem.body}
             />
           </Form.Item>
+          {error && <h4>Something wrong...</h4>}
         </Form>
       </Modal>
     </>

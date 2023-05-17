@@ -12,8 +12,8 @@ export const ALL_POST = gql`
 `;
 
 export const GET_POST = gql`
-  query GetPost($id: ID!) {
-    post(id: $id) {
+  query ($id: ID!) {
+    post: Post(id: $id) {
       id
       title
       postImage
@@ -23,13 +23,8 @@ export const GET_POST = gql`
 `;
 
 export const ADD_POST = gql`
-  mutation AddPost(
-    $title: String!
-    $title: String!
-    $postImage: String!
-    $body: String!
-  ) {
-    newPost: createPost(
+  mutation AddPost($title: String!, $postImage: String!, $body: String!) {
+    addPost: createPost(
       id: $id
       title: $title
       postImage: $postImage
@@ -42,6 +37,16 @@ export const ADD_POST = gql`
     }
   }
 `;
+
+// const CREATE_POST = gql`
+//   mutation CreatePost($title: String!, $body: String!) {
+//     createPost(title: $title, body: $body) {
+//       id
+//       title
+//       body
+//     }
+//   }
+// `;
 
 export const UPDATE_POST = gql`
   mutation UpdatePost(
