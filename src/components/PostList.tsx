@@ -24,7 +24,7 @@ const PostList = () => {
 
   const { loading, error, data } = useQuery<Response, PostsVars>(ALL_POST, {
     variables: {
-      page: currentPage,
+      page: (currentPage - 1) * POSTS_PER_PAGE,
       perPage: POSTS_PER_PAGE,
     },
   });
