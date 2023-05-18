@@ -5,8 +5,6 @@ import { IPost } from "../models/IPost";
 import { Link } from "react-router-dom";
 import UpdatePostItem from "./modals/UpdatePostItem";
 import ConfirmRemovePostItem from "./modals/ConfirmRemovePostItem";
-import { DELETE_POST, ALL_POST } from "@/apollo/posts";
-import { useMutation } from "@apollo/client";
 // import { StarFilled, StarOutlined } from "@ant-design/icons";
 
 const { Meta } = Card;
@@ -18,11 +16,6 @@ export interface PostItemProps {
 const PostItem = ({ post }: PostItemProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmRemoveOpen, setIsConfirmRemoveOpen] = useState(false);
-
-  const [removePost] = useMutation(DELETE_POST, {
-    refetchQueries: [{ query: ALL_POST }],
-  });
-
   // const { addFavorite, removeFavorite } = useActions();
   // const { favorites } = useAppSelector((state) => state.favoritePosts);
   // const [isFav, setIsFav] = useState(favorites.includes(post.title));
@@ -35,18 +28,12 @@ const PostItem = ({ post }: PostItemProps) => {
     setIsConfirmRemoveOpen(true);
   };
 
-  const handleCloseRemoveModal = () => {
-    setIsConfirmRemoveOpen(false);
-  };
-
-  const handleRemove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    removePost({ variables: { id: post.id } });
-    console.log("ID remove", post.id);
-  };
-
   const handlePostUpdateOpen = () => {
     setIsModalOpen(true);
+  };
+
+  const handleCloseRemoveModal = () => {
+    setIsConfirmRemoveOpen(false);
   };
 
   // Favorites
@@ -71,10 +58,10 @@ const PostItem = ({ post }: PostItemProps) => {
         postItem={post}
       />
       <ConfirmRemovePostItem
-        onOk={handleRemove}
         open={isConfirmRemoveOpen}
         title="Please confirm Remove"
         onCancel={handleCloseRemoveModal}
+        idRemove={post.id}
         contentRemove={post.title}
       />
       <Card
