@@ -1,23 +1,33 @@
 import React from "react";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import PostItem from "./PostItem";
 import { IPost } from "@/models/IPost";
-import { Col, Divider, Row, FloatButton } from "antd";
+import { Col, Divider, Row, FloatButton, Button } from "antd";
 import SpinnerPostList from "./SpinnerPostList";
 import CreatePostItem from "./modals/CreatePostItem";
 import { FileAddOutlined } from "@ant-design/icons";
-import { ALL_POST, DELETE_POST } from "@/apollo/posts";
+import { ALL_POST } from "@/apollo/posts";
 
 interface Response {
   posts: IPost[];
 }
 
-const PostList = () => {
-  const [removePost] = useMutation(DELETE_POST, {
-    refetchQueries: [{ query: ALL_POST }],
-  });
+interface PostsVars {
+  page: number;
+  perPage: number;
+}
 
-  const { loading, error, data } = useQuery<Response>(ALL_POST);
+const POSTS_PER_PAGE = 9;
+
+const PostList = () => {
+  const [currentPage, setCurrentPage] = React.useState(1);
+
+  const { loading, error, data } = useQuery<Response, PostsVars>(ALL_POST, {
+    variables: {
+      page: currentPage,
+      perPage: POSTS_PER_PAGE,
+    },
+  });
 
   const [isOpenCreateModal, setIsOpenCreateModal] =
     React.useState<boolean>(false);
@@ -30,9 +40,15 @@ const PostList = () => {
     setIsOpenCreateModal(false);
   };
 
-  const handleRemove = (postId: number) => {
-    removePost({ variables: { id: postId } });
+  const handleNextPage = () => {
+    setCurrentPage(currentPage + 1);
   };
+
+  const handlePrevPage = () => {
+    setCurrentPage(currentPage - 1);
+  };
+
+  const isPrevButtonDisabled = currentPage === 1;
 
   return (
     <>
@@ -53,11 +69,15 @@ const PostList = () => {
       <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
         {data?.posts.map((post) => (
           <Col className="gutter-row" span={8} key={post.id}>
-            <PostItem remove={handleRemove} post={post} />
+            <PostItem post={post} />
           </Col>
         ))}
       </Row>
       <Divider />
+      <Button onClick={handleNextPage} disabled={isPrevButtonDisabled}>
+        Prev Page
+      </Button>
+      <Button onClick={handlePrevPage}>Next Page</Button>
     </>
   );
 };

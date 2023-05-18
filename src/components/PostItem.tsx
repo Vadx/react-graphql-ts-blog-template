@@ -5,18 +5,23 @@ import { IPost } from "../models/IPost";
 import { Link } from "react-router-dom";
 import UpdatePostItem from "./modals/UpdatePostItem";
 import ConfirmRemovePostItem from "./modals/ConfirmRemovePostItem";
+import { DELETE_POST, ALL_POST } from "@/apollo/posts";
+import { useMutation } from "@apollo/client";
 // import { StarFilled, StarOutlined } from "@ant-design/icons";
 
 const { Meta } = Card;
 
 export interface PostItemProps {
   post: IPost;
-  remove: (post: number) => void;
 }
 
-const PostItem = ({ post, remove }: PostItemProps) => {
+const PostItem = ({ post }: PostItemProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isConfirmRemoveOpen, setIsConfirmRemoveOpen] = useState(false);
+
+  const [removePost] = useMutation(DELETE_POST, {
+    refetchQueries: [{ query: ALL_POST }],
+  });
 
   // const { addFavorite, removeFavorite } = useActions();
   // const { favorites } = useAppSelector((state) => state.favoritePosts);
@@ -34,9 +39,10 @@ const PostItem = ({ post, remove }: PostItemProps) => {
     setIsConfirmRemoveOpen(false);
   };
 
-  const handleRemove = (e: React.MouseEvent<HTMLElement>) => {
+  const handleRemove = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    remove(post.id);
+    removePost({ variables: { id: post.id } });
+    console.log("ID remove", post.id);
   };
 
   const handlePostUpdateOpen = () => {

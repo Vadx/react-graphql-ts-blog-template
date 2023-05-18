@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const ALL_POST = gql`
-  query AllPosts {
-    posts: allPosts {
+  query AllPosts($page: Int!, $perPage: Int!) {
+    posts: allPosts(page: $page, perPage: $perPage) {
       id
       title
       postImage
