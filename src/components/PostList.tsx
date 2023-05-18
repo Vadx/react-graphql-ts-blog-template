@@ -2,7 +2,7 @@ import React from "react";
 import { useQuery } from "@apollo/client";
 import PostItem from "./PostItem";
 import { IPost } from "@/models/IPost";
-import { Col, Divider, Row, FloatButton, Button } from "antd";
+import { Col, Divider, Row, FloatButton, Button, Space } from "antd";
 import SpinnerPostList from "./SpinnerPostList";
 import CreatePostItem from "./modals/CreatePostItem";
 import { FileAddOutlined } from "@ant-design/icons";
@@ -74,10 +74,12 @@ const PostList = () => {
         ))}
       </Row>
       <Divider />
-      <Button onClick={handleNextPage} disabled={isPrevButtonDisabled}>
-        Prev Page
-      </Button>
-      <Button onClick={handlePrevPage}>Next Page</Button>
+      <Space wrap>
+        <Button onClick={handleNextPage} disabled={isPrevButtonDisabled}>
+          Prev Page
+        </Button>
+        <Button onClick={handlePrevPage}>Next Page</Button>
+      </Space>
     </>
   );
 };
